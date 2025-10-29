@@ -7,7 +7,7 @@
     <Authors>Geneirodan</Authors>
     <RepositoryUrl>https://github.com/Geneirodan/Packages</RepositoryUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <VersionPrefix>1.0.4</VersionPrefix>
+    <VersionPrefix>1.0.5</VersionPrefix>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Meziantou.Analyzer">
