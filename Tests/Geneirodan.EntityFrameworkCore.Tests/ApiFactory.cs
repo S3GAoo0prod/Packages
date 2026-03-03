@@ -1,4 +1,4 @@
-﻿using Geneirodan.Abstractions.Repositories;
+using Geneirodan.Abstractions.Repositories;
 using Geneirodan.SampleApi;
 using Geneirodan.SampleApi.Persistence;
 using JetBrains.Annotations;
@@ -10,6 +10,10 @@ using Testcontainers.PostgreSql;
 
 namespace Geneirodan.EntityFrameworkCore.Tests;
 
+/// <summary>
+/// Web application factory for integration tests. Uses Testcontainers to run a PostgreSQL instance and configures
+/// the sample API to use it for <see cref="ApplicationContext"/>, with <see cref="IRepository{TEntity, TKey}"/> and <see cref="IUnitOfWork"/> registered.
+/// </summary>
 [UsedImplicitly]
 public sealed class ApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {

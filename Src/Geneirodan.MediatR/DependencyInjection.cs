@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+using System.Reflection;
+using Geneirodan.MediatR.Abstractions;
 using Geneirodan.MediatR.Behaviors;
 using Geneirodan.MediatR.Options;
 using JetBrains.Annotations;
@@ -8,27 +9,29 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Geneirodan.MediatR;
 
 /// <summary>
-/// Provides extension methods for registering MediatR pipeline behaviors and options in the <see cref="IServiceCollection"/>.
+/// Extension methods to register MediatR and the Geneirodan.MediatR pipeline (logging, authorization, validation, exception handling).
+/// Call <see cref="AddMediatRPipeline(IServiceCollection, Assembly[])"/> or the overload with <see cref="MediatRPipelineOptions"/> from the application startup.
+/// Pass the assemblies that contain <see cref="ICommand"/> / <see cref="IQuery{T}"/> and their handlers.
 /// </summary>
 [PublicAPI]
 public static class DependencyInjection
 {
     /// <summary>
-    /// Registers the MediatR pipeline behaviors with default options.
+    /// Registers MediatR and the pipeline behaviors with default options (all behaviors enabled). Request and handler types are discovered from the given assemblies.
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the pipeline behaviors to.</param>
-    /// <param name="assemblies">The assemblies that contain MediatR request and handler types.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> with MediatR pipeline behaviors added.</returns>
+    /// <param name="services">The service collection to add MediatR and pipeline behaviors to.</param>
+    /// <param name="assemblies">The assemblies to scan for request and handler types (e.g. <c>Assembly.GetExecutingAssembly()</c>).</param>
+    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddMediatRPipeline(this IServiceCollection services, params Assembly[] assemblies)
         => services.AddMediatRPipeline(new MediatRPipelineOptions(), assemblies);
 
     /// <summary>
-    /// Registers the MediatR pipeline behaviors with custom options.
+    /// Registers MediatR and the pipeline behaviors with the given options. Use <paramref name="options"/> to disable logging, authorization, validation, or exception handling.
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to add the pipeline behaviors to.</param>
-    /// <param name="options">The configuration options for the MediatR pipeline behaviors.</param>
-    /// <param name="assemblies">The assemblies that contain MediatR request and handler types.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> with MediatR pipeline behaviors added.</returns>
+    /// <param name="services">The service collection to add MediatR and pipeline behaviors to.</param>
+    /// <param name="options">Options that control which pipeline behaviors are registered.</param>
+    /// <param name="assemblies">The assemblies to scan for request and handler types.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddMediatRPipeline(
         this IServiceCollection services,
         MediatRPipelineOptions options,

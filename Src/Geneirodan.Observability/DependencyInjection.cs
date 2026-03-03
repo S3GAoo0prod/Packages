@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +15,8 @@ using static Serilog.Sinks.OpenTelemetry.IncludedData;
 namespace Geneirodan.Observability;
 
 /// <summary>
-/// A static class for registering and configuring observability-related services, such as OpenTelemetry and Serilog.
+/// Extension methods to register OpenTelemetry (metrics and tracing) and Serilog with OTLP export.
+/// When the OTLP endpoint is not configured (<c>OTEL_EXPORTER_OTLP_ENDPOINT</c>), OpenTelemetry registration is skipped; Serilog still configures console and any sinks from configuration.
 /// </summary>
 [PublicAPI]
 public static class DependencyInjection
@@ -23,13 +24,14 @@ public static class DependencyInjection
     private const string OtelEndpointName = "OTEL_EXPORTER_OTLP_ENDPOINT";
 
     /// <summary>
-    /// Adds OpenTelemetry services to the provided <see cref="IServiceCollection"/> for collecting metrics and tracing.
+    /// Registers OpenTelemetry metrics and tracing with OTLP exporter if <c>OTEL_EXPORTER_OTLP_ENDPOINT</c> is set in configuration.
+    /// Binds <see cref="OpenTelemetrySettings"/> from the specified config section and enables instrumentation (AspNetCore, Http, EF Core, runtime) and meters as configured.
+    /// Service name is taken from configuration or the entry assembly name.
     /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection"/> to register services with.</param>
-    /// <param name="configuration">The configuration instance containing the OpenTelemetry settings.</param>
-    /// <param name="sectionName">The section name in the configuration to bind OpenTelemetry settings. Defaults to "OpenTelemetry".</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> with OpenTelemetry services added.</returns>
-
+    /// <param name="services">The service collection to register OpenTelemetry with.</param>
+    /// <param name="configuration">The configuration that contains the OTLP endpoint and the OpenTelemetry section.</param>
+    /// <param name="sectionName">The configuration section name for <see cref="OpenTelemetrySettings"/>. Defaults to <c>OpenTelemetry</c>.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
     public static IServiceCollection AddSharedOpenTelemetry(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -81,10 +83,12 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Configures Serilog logging for the application, including OpenTelemetry integration.
+    /// Configures Serilog to read from host configuration and services, enriches with log context and application name,
+    /// writes to console and (when <c>OTEL_EXPORTER_OTLP_ENDPOINT</c> is set) to OpenTelemetry via OTLP gRPC with trace/span context.
+    /// Call this on the host builder before building so that startup and pipeline use Serilog.
     /// </summary>
-    /// <param name="builder">The <see cref="IHostApplicationBuilder"/> to configure.</param>
-    /// <returns>The updated <see cref="IHostApplicationBuilder"/> with Serilog configured.</returns>
+    /// <param name="builder">The host application builder (e.g. <c>WebApplication.CreateBuilder(args)</c>).</param>
+    /// <returns>The updated <see cref="IHostApplicationBuilder"/>.</returns>
     public static IHostApplicationBuilder AddSerilog(this IHostApplicationBuilder builder)
     {
         var serviceName = builder.Configuration.GetServiceName();

@@ -5,12 +5,18 @@ namespace Geneirodan.Abstractions.Repositories;
 /// <summary>
 /// Defines the contract for a repository that manages entities of type <typeparamref name="TEntity"/>
 /// with a primary key of type <typeparamref name="TKey"/>.
+/// Repositories abstract persistence and are used together with <see cref="IUnitOfWork"/> for transactional
+/// operations. The concrete implementation is provided by the Geneirodan.EntityFrameworkCore package.
 /// </summary>
+/// <remarks>
+/// <seealso cref="IUnitOfWork"/> — use together for transactional persistence.<br/>
+/// <seealso cref="IEntity{TKey}"/> — <typeparamref name="TEntity"/> must implement this interface.
+/// </remarks>
 /// <typeparam name="TEntity">
 /// The type of the entity that the repository manages. It must implement the <see cref="IEntity{TKey}"/> interface.
 /// </typeparam>
 /// <typeparam name="TKey">
-/// The type of the primary key of the entity. It must implement <see cref="IEquatable{TKey}"/>.
+/// The type of the primary key of the entity. It must implement <see cref="IEquatable{TKey}"/> for lookups.
 /// </typeparam>
 public interface IRepository<TEntity, in TKey>
     where TEntity : IEntity<TKey>

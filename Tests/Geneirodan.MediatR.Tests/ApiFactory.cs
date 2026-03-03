@@ -1,4 +1,4 @@
-﻿using Geneirodan.Abstractions.Domain;
+using Geneirodan.Abstractions.Domain;
 using Geneirodan.SampleApi;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +9,10 @@ using Serilog;
 
 namespace Geneirodan.MediatR.Tests;
 
+/// <summary>
+/// Web application factory for MediatR pipeline tests. Hosts the sample API and replaces <see cref="IUser"/> with a mock
+/// so that authorization and logging behaviors can be tested with a controlled user.
+/// </summary>
 [UsedImplicitly]
 public sealed class ApiFactory : WebApplicationFactory<IApiMarker>
 {

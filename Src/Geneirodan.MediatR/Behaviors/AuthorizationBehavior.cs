@@ -20,7 +20,14 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(IUser user) : IPi
     where TRequest : notnull
     where TResponse : Result
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// If <paramref name="request"/> type has no <see cref="AuthorizeAttribute"/>, proceeds to the handler. Otherwise ensures the current <see cref="IUser"/>
+    /// is authenticated (Id is not empty) and, if roles are specified, that the user is in at least one of the roles; otherwise returns Unauthorized or Forbidden.
+    /// </summary>
+    /// <param name="request">The command or query being handled.</param>
+    /// <param name="next">The next delegate in the pipeline.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The response from the handler or an unauthorized/forbidden result.</returns>
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,

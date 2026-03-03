@@ -1,4 +1,4 @@
-﻿using Geneirodan.Abstractions.Domain;
+using Geneirodan.Abstractions.Domain;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -6,21 +6,24 @@ using Serilog.Context;
 namespace Geneirodan.MediatR.Behaviors;
 
 /// <summary>
-/// A pipeline behavior that logs information about incoming requests before they are processed.
-/// It logs the name of the request, the user ID, and the details of the request itself.
+/// MediatR request pre-processor that logs each incoming request before the pipeline runs.
+/// Logs the request type name and, when <see cref="IUser"/> is available and authenticated, the user ID.
+/// Request payload is pushed to Serilog's log context so that structured logging can capture it.
 /// </summary>
-/// <typeparam name="TRequest">
-/// The type of the request being processed. This should be a non-nullable type.
-/// </typeparam>
+/// <typeparam name="TRequest">The type of the request (command or query) being processed.</typeparam>
 public sealed partial class LoggingPreProcessor<TRequest>(ILogger<TRequest> logger) : IRequestPreProcessor<TRequest>
     where TRequest : notnull
 {
     private readonly IUser? _user;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Constructor used when <see cref="IUser"/> is registered; allows logging the current user ID.
+    /// </summary>
     public LoggingPreProcessor(ILogger<TRequest> logger, IUser? user) : this(logger) => _user = user;
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Logs the request name and optional user ID, then completes so that the pipeline continues.
+    /// </summary>
     public Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;

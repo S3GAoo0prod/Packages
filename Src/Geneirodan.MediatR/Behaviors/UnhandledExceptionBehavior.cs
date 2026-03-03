@@ -1,23 +1,22 @@
-﻿using Ardalis.Result;
+using Ardalis.Result;
 using Microsoft.Extensions.Logging;
 
 namespace Geneirodan.MediatR.Behaviors;
 
 /// <summary>
-/// A pipeline behavior that catches and logs any unhandled exceptions thrown during request processing.
-/// This behavior ensures that any unhandled exceptions are logged before being rethrown to be handled elsewhere in the application.
+/// Pipeline behavior that catches any exception thrown by the handler (or inner behaviors), logs it with the request name,
+/// then rethrows so that the ASP.NET Core exception handler (or host) can convert it to a response. Does not convert
+/// exceptions to <see cref="Result"/>; use handler try/catch or validation/authorization for that.
 /// </summary>
-/// <typeparam name="TRequest">
-/// The type of the request being processed. This should be a non-nullable type.
-/// </typeparam>
-/// <typeparam name="TResponse">
-/// The type of the response that will be returned after handling the request. This is typically a <see cref="Result"/> type.
-/// </typeparam>
-public sealed partial class UnhandledExceptionBehavior<TRequest, TResponse>(ILogger<TRequest> logger) 
+/// <typeparam name="TRequest">The type of the request being processed.</typeparam>
+/// <typeparam name="TResponse">The type of the response (e.g. <see cref="Result"/> or <see cref="Result{T}"/>).</typeparam>
+public sealed partial class UnhandledExceptionBehavior<TRequest, TResponse>(ILogger<TRequest> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Invokes the next delegate; on exception, logs and rethrows.
+    /// </summary>
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         try

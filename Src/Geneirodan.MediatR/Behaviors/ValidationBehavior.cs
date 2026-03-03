@@ -1,26 +1,24 @@
-﻿using Ardalis.Result;
+using Ardalis.Result;
 using Ardalis.Result.FluentValidation;
 using FluentValidation;
 
 namespace Geneirodan.MediatR.Behaviors;
 
 /// <summary>
-/// A pipeline behavior that performs request validation before passing it to the handler.
-/// This behavior validates the request using a collection of validators and returns an invalid result
-/// if any validation errors are found. Otherwise, it proceeds to the next step in the pipeline.
+/// Pipeline behavior that runs all FluentValidation validators registered for <typeparamref name="TRequest"/> before the handler.
+/// If any validator fails, returns an <see cref="Ardalis.Result.ResultStatus.Invalid"/> result with the validation errors
+/// via <see cref="DynamicResults.Invalid{TResponse}"/>; otherwise calls the next delegate. Validators are resolved from the container.
 /// </summary>
-/// <typeparam name="TRequest">
-/// The type of the request being processed. It is a non-nullable type that represents the request.
-/// </typeparam>
-/// <typeparam name="TResponse">
-/// The type of the response returned by the request handler. It must be a result type that can encapsulate validation errors.
-/// </typeparam>
+/// <typeparam name="TRequest">The type of the request (command or query) to validate.</typeparam>
+/// <typeparam name="TResponse">The response type; must implement <see cref="IResult"/> so that validation errors can be returned.</typeparam>
 public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : class, IResult
 {
-    /// <inheritdoc />
+    /// <summary>
+    /// Runs all validators for the request; if valid, proceeds to the handler; otherwise returns an invalid result with errors.
+    /// </summary>
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,

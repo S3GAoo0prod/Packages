@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OpenApi;
@@ -7,7 +7,9 @@ using Microsoft.OpenApi.Models;
 namespace Geneirodan.AspNetCore;
 
 /// <summary>
-/// Represents a transformer that can be used to modify an OpenAPI document to add JWT bearer security schema.
+/// OpenAPI document transformer that adds the JWT Bearer security scheme and applies it to all operations when JWT authentication is configured.
+/// Used by Swagger/OpenAPI UI so that "Authorize" uses the Bearer token. Registers the scheme in <c>document.Components.SecuritySchemes</c>
+/// and adds the security requirement to each operation so that generated clients send the Authorization header.
 /// </summary>
 [PublicAPI]
 public sealed class JwtBearerSecuritySchemeTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider)
@@ -35,7 +37,12 @@ public sealed class JwtBearerSecuritySchemeTransformer(IAuthenticationSchemeProv
         ] = []
     };
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Adds JWT Bearer security scheme and requirement to the OpenAPI document if the JWT Bearer authentication scheme is registered.
+    /// </summary>
+    /// <param name="document">The OpenAPI document to transform.</param>
+    /// <param name="context">The transformer context.</param>
+    /// <param name="cancellationToken">A token that can be used to cancel the operation.</param>
     public async Task TransformAsync(
         OpenApiDocument document,
         OpenApiDocumentTransformerContext context,

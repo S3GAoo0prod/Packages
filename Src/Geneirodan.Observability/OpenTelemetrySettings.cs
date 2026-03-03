@@ -1,26 +1,26 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 
 namespace Geneirodan.Observability;
 
 /// <summary>
-/// Represents the settings for OpenTelemetry configuration.
+/// Configuration for OpenTelemetry metrics and tracing. Bound from the <c>OpenTelemetry</c> config section when
+/// <see cref="DependencyInjection.AddSharedOpenTelemetry"/> is used. When a section is <see langword="null"/>, that signal is not registered.
 /// </summary>
 [PublicAPI]
 public sealed record OpenTelemetrySettings
 {
     /// <summary>
-    /// Gets or sets the metrics-related configuration settings.
-    /// 
+    /// When set, configures which metrics instrumentation and meters are enabled and exported via OTLP.
     /// </summary>
     public MetricsSettings? Metrics { get; init; }
 
     /// <summary>
-    /// Gets or sets the tracing-related configuration settings.
+    /// When set, configures which tracing instrumentation is enabled (AspNetCore, HttpClient, EF Core) and exports spans via OTLP.
     /// </summary>
     public TracingSettings? Tracing { get; init; }
 
     /// <summary>
-    /// Represents the settings for OpenTelemetry metrics instrumentation.
+    /// Options for OpenTelemetry metrics: which instrumentations to enable and which custom meters to add.
     /// </summary>
     public sealed record MetricsSettings
     {
@@ -46,7 +46,7 @@ public sealed record OpenTelemetrySettings
     }
 
     /// <summary>
-    /// Represents the settings for OpenTelemetry tracing instrumentation.
+    /// Options for OpenTelemetry tracing: which instrumentations (AspNetCore, HTTP client, EF Core) to enable.
     /// </summary>
     public sealed record TracingSettings
     {

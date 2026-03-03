@@ -1,4 +1,4 @@
-﻿using Geneirodan.Abstractions.Domain;
+using Geneirodan.Abstractions.Domain;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,18 +6,22 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Geneirodan.AspNetCore;
 
 /// <summary>
-/// Provides extension methods for configuring services in <see cref="IServiceCollection"/>.
+/// Extension methods to register ASP.NET Core and Geneirodan.AspNetCore services: JWT authentication,
+/// current user (<see cref="IUser"/>), localization, and central exception handling with problem details.
 /// </summary>
 [PublicAPI]
 public static class DependencyInjection
 {
     /// <summary>
-    /// Adds JWT authentication services to the <see cref="IServiceCollection"/> using a specified metadata address.
+    /// Registers JWT Bearer authentication as the default scheme. Configuration is bound from <paramref name="sectionName"/>.
+    /// Use <paramref name="configureOptions"/> to override or add options (e.g. token validation). After this call, the HTTP context user
+    /// is populated from the Bearer token and <see cref="AddHttpUser"/> can provide <see cref="IUser"/>.
     /// </summary>
     /// <param name="services">The service collection to add the authentication services to.</param>
-    /// <param name="configureOptions"></param>
-    /// <param name="sectionName">The section name for the JWT bearer token configuration.</param>
+    /// <param name="configureOptions">Optional delegate to configure <see cref="JwtBearerOptions"/>.</param>
+    /// <param name="sectionName">The configuration section name for JWT options. Defaults to <c>JwtAuth</c>.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> with JWT authentication configured.</returns>
+    /// <remarks>When <paramref name="sectionName"/> is used, the corresponding config section must contain valid JWT options (e.g. Authority, Audience).</remarks>
     public static IServiceCollection AddJwtAuth(
         this IServiceCollection services, 
         Action<JwtBearerOptions>? configureOptions = null,
@@ -45,21 +49,24 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Adds HTTP implementation of <see cref="IUser"/> services to the <see cref="IServiceCollection"/>.
+    /// Registers <see cref="IUser"/> as a scoped service implemented by <see cref="HttpUser"/>, which reads the current
+    /// HTTP context claims. Requires HTTP context accessor (and typically JWT auth via <see cref="AddJwtAuth"/>).
+    /// Handlers and authorization can then depend on <see cref="IUser"/> instead of HTTP types.
     /// </summary>
     /// <param name="services">The service collection to add the user services to.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> with HTTP user service added.</returns>
+    /// <returns>The updated <see cref="IServiceCollection"/> with <see cref="IUser"/> and <see cref="HttpUser"/> registered.</returns>
     public static IServiceCollection AddHttpUser(this IServiceCollection services) =>
         services
             .AddHttpContextAccessor()
             .AddScoped<IUser, HttpUser>();
 
     /// <summary>
-    /// Adds web localization services to the <see cref="IServiceCollection"/>.
+    /// Registers request localization with the given supported cultures. The first culture in <paramref name="supportedCultures"/>
+    /// is used as the default. Use this when the API or views need to vary by <see cref="System.Globalization.CultureInfo.CurrentCulture"/>.
     /// </summary>
     /// <param name="services">The service collection to add the localization services to.</param>
-    /// <param name="supportedCultures">A list of supported cultures for localization.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> with localization services configured.</returns>
+    /// <param name="supportedCultures">The list of supported culture names (e.g. "en", "ru"). The first is the default.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/> with localization and request localization configured.</returns>
     public static IServiceCollection AddWebLocalization(this IServiceCollection services,
         params string[] supportedCultures) =>
         services
@@ -71,10 +78,12 @@ public static class DependencyInjection
             );
 
     /// <summary>
-    /// Adds error handling services to the <see cref="IServiceCollection"/>.
+    /// Registers <see cref="ExceptionHandler"/> as the application's exception handler and configures problem details
+    /// so that Instance and requestId are set per request. When an unhandled exception occurs, the pipeline writes
+    /// RFC 7807 problem details and an appropriate status code (see <see cref="ExceptionHandler"/>).
     /// </summary>
     /// <param name="services">The service collection to add the error handling services to.</param>
-    /// <returns>The updated <see cref="IServiceCollection"/> with error handling services configured.</returns>
+    /// <returns>The updated <see cref="IServiceCollection"/> with exception handler and problem details configured.</returns>
     public static IServiceCollection AddErrorHandling(this IServiceCollection services) =>
         services
             .AddExceptionHandler<ExceptionHandler>()

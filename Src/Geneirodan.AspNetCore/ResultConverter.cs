@@ -1,4 +1,4 @@
-﻿using Ardalis.Result;
+using Ardalis.Result;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -7,19 +7,20 @@ using IResult = Ardalis.Result.IResult;
 namespace Geneirodan.AspNetCore;
 
 /// <summary>
-/// Provides extension methods to convert an <see cref="Ardalis.Result.IResult"/>
-/// into an ASP.NET Core <see cref="Microsoft.AspNetCore.Http.IResult"/>.
+/// Converts <see cref="Ardalis.Result.IResult"/> (returned by MediatR handlers) into ASP.NET Core minimal API <see cref="Microsoft.AspNetCore.Http.IResult"/>.
+/// Use <see cref="MapResult(IResult)"/> in endpoint lambdas after sending a command or query so that Ok/NotFound/ValidationProblem
+/// and other results are written correctly. Maps <see cref="ResultStatus"/> to HTTP status codes and problem details.
 /// </summary>
 [PublicAPI]
-public static class ResultConverter 
+public static class ResultConverter
 {
     /// <summary>
-    /// Maps the given <see cref="Ardalis.Result.IResult"/>
-    /// to an appropriate ASP.NET Core <see cref="Microsoft.AspNetCore.Http.IResult"/>.
+    /// Maps the given <see cref="Ardalis.Result.IResult"/> to the corresponding ASP.NET Core <see cref="Microsoft.AspNetCore.Http.IResult"/>.
+    /// Handles Ok, Created, NoContent, NotFound, Unauthorized, Forbidden, Invalid (validation errors), Error, Conflict, Unavailable, and CriticalError.
     /// </summary>
-    /// <param name="result">The <see cref="Ardalis.Result.IResult"/> to map.</param>
-    /// <returns>An <see cref="Microsoft.AspNetCore.Http.IResult"/> representing the HTTP response.</returns>
-    /// <exception cref="NotSupportedException">Thrown when the result status is not supported.</exception>
+    /// <param name="result">The result returned from a MediatR handler (e.g. <see cref="Result"/> or <see cref="Result{T}"/>).</param>
+    /// <returns>An <see cref="Microsoft.AspNetCore.Http.IResult"/> that writes the appropriate HTTP response for <paramref name="result"/>.</returns>
+    /// <exception cref="NotSupportedException">Thrown when <paramref name="result"/> has a <see cref="ResultStatus"/> that is not mapped to an HTTP result.</exception>
     public static Microsoft.AspNetCore.Http.IResult MapResult(this IResult result) => result.Status switch
     {
         ResultStatus.Ok => result is Result ? TypedResults.Ok() : TypedResults.Ok(result.GetValue()),
