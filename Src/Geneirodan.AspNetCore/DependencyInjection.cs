@@ -2,7 +2,6 @@
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Geneirodan.AspNetCore;
 
@@ -16,22 +15,31 @@ public static class DependencyInjection
     /// Adds JWT authentication services to the <see cref="IServiceCollection"/> using a specified metadata address.
     /// </summary>
     /// <param name="services">The service collection to add the authentication services to.</param>
-    /// <param name="metadataAddress">The metadata address for the JWT bearer token configuration.</param>
+    /// <param name="configureOptions"></param>
+    /// <param name="sectionName">The section name for the JWT bearer token configuration.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> with JWT authentication configured.</returns>
-    public static IServiceCollection AddJwtAuth(this IServiceCollection services, string metadataAddress)
+    public static IServiceCollection AddJwtAuth(
+        this IServiceCollection services, 
+        Action<JwtBearerOptions>? configureOptions = null,
+        string sectionName = "JwtAuth"
+        )
     {
-        services
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .BindConfiguration(sectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        var authenticationBuilder = services
             .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.MetadataAddress = metadataAddress;
-                options.TokenValidationParameters = new TokenValidationParameters { ClockSkew = TimeSpan.Zero };
             });
+        
+        if (configureOptions is null)
+            authenticationBuilder.AddJwtBearer();
+        else
+            authenticationBuilder.AddJwtBearer(configureOptions);
 
         return services;
     }

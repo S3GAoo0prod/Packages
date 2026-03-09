@@ -1,5 +1,5 @@
 [*]
-charset = utf-8
+charset = utf-8-bom
 end_of_line = crlf
 trim_trailing_whitespace = false
 insert_final_newline = false
@@ -13,6 +13,30 @@ csharp_style_prefer_utf8_string_literals = true:suggestion
 csharp_style_var_elsewhere = true:suggestion
 csharp_style_var_for_built_in_types = true:suggestion
 csharp_style_var_when_type_is_apparent = true:suggestion
+dotnet_naming_rule.interfaces_rule.import_to_resharper = True
+dotnet_naming_rule.interfaces_rule.resharper_description = Interfaces
+dotnet_naming_rule.interfaces_rule.resharper_guid = a7a3339e-4e89-4319-9735-a9dc4cb74cc7
+dotnet_naming_rule.interfaces_rule.severity = warning
+dotnet_naming_rule.interfaces_rule.style = i_upper_camel_case_style
+dotnet_naming_rule.interfaces_rule.symbols = interfaces_symbols
+dotnet_naming_rule.property_rule.import_to_resharper = True
+dotnet_naming_rule.property_rule.resharper_description = Properties
+dotnet_naming_rule.property_rule.resharper_guid = c85a0503-4de2-40f1-9cd6-a4054c05d384
+dotnet_naming_rule.property_rule.resharper_style = AaBb, aaBb
+dotnet_naming_rule.property_rule.severity = warning
+dotnet_naming_rule.property_rule.style = upper_camel_case_style
+dotnet_naming_rule.property_rule.symbols = property_symbols
+dotnet_naming_style.i_upper_camel_case_style.capitalization = pascal_case
+dotnet_naming_style.i_upper_camel_case_style.required_prefix = I
+dotnet_naming_style.upper_camel_case_style.capitalization = pascal_case
+dotnet_naming_symbols.interfaces_symbols.applicable_accessibilities = *
+dotnet_naming_symbols.interfaces_symbols.applicable_kinds = interface
+dotnet_naming_symbols.interfaces_symbols.resharper_applicable_kinds = interface
+dotnet_naming_symbols.interfaces_symbols.resharper_required_modifiers = any
+dotnet_naming_symbols.property_symbols.applicable_accessibilities = *
+dotnet_naming_symbols.property_symbols.applicable_kinds = property
+dotnet_naming_symbols.property_symbols.resharper_applicable_kinds = property
+dotnet_naming_symbols.property_symbols.resharper_required_modifiers = any
 dotnet_style_parentheses_in_arithmetic_binary_operators = never_if_unnecessary:none
 dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:none
 dotnet_style_parentheses_in_relational_binary_operators = never_if_unnecessary:none
@@ -52,14 +76,24 @@ resharper_redundant_base_qualifier_highlighting = warning
 resharper_suggest_var_or_type_built_in_types_highlighting = hint
 resharper_suggest_var_or_type_elsewhere_highlighting = hint
 resharper_suggest_var_or_type_simple_types_highlighting = hint
+resharper_unused_auto_property_accessor_global_highlighting = none
 resharper_web_config_module_not_resolved_highlighting = warning
 resharper_web_config_type_not_resolved_highlighting = warning
 resharper_web_config_wrong_module_highlighting = warning
 configure_await_analysis_mode = library
 
-[*.{yaml,yml,csproj,props}]
+dotnet_diagnostic.MA0007.severity = none
+
+# Report public classes without inheritors (default: false)
+MA0053.public_class_should_be_sealed = true
+MA0053.exceptions_should_be_sealed = true
+
+[{*.har,*.jsb2,*.jsb3,*.json,*.jsonc,*.postman_collection,*.postman_environment,.babelrc,.eslintrc,.prettierrc,.stylelintrc,.ws-context,jest.config}]
 indent_size = 2
-tab_width = 2
+
+[{*.yaml,*.yml,*.csproj,*.slnx,*.props}]
+indent_size = 2
 
 [*.{appxmanifest,asax,ascx,aspx,axaml,blockshader,build,c,c++,c++m,cc,ccm,cginc,compute,cp,cpp,cppm,cs,cshtml,cu,cuh,cxx,cxxm,dtd,fs,fsi,fsscript,fsx,fx,fxh,h,h++,hh,hlsl,hlsli,hlslinc,hp,hpp,hxx,icc,inc,inl,ino,ipp,ixx,master,ml,mli,mpp,mq4,mq5,mqh,mxx,nuspec,paml,razor,resw,resx,shaderFoundry,skin,tcc,tpp,urtshader,usf,ush,vb,xaml,xamlx,xoml,xsd}]
 tab_width = 4
+

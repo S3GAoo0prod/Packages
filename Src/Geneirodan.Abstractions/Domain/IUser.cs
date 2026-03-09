@@ -9,7 +9,7 @@ public interface IUser
     /// Unique identifier of the user.
     /// The identifier is nullable in case the user is not yet assigned an ID (e.g., for anonymous users).
     /// </summary>
-    Guid? Id { get; }
+    Guid Id { get; }
 
     /// <summary>
     /// Determines whether the user is in the specified role.

@@ -13,12 +13,12 @@ public sealed class HttpUser(IHttpContextAccessor httpContextAccessor) : IUser
     public bool IsInRole(string role) => httpContextAccessor.HttpContext?.User.IsInRole(role) ?? false;
 
     /// <inheritdoc />
-    public Guid? Id
+    public Guid Id
     {
         get
         {
             var value = httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Guid.TryParse(value.AsSpan(), out var result) ? result : null;
+            return Guid.TryParse(value.AsSpan(), out var result) ? result : Guid.Empty;
         }
     }
 }

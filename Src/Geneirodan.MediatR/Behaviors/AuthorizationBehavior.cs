@@ -32,7 +32,7 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(IUser user) : IPi
         if (authorizeAttributes.Length == 0)
             return await next(cancellationToken).ConfigureAwait(false);
 
-        if (user.Id is null)
+        if (user.Id == Guid.Empty)
             return DynamicResults.Unauthorized<TResponse>();
 
         var authorizeAttributesWithRoles =

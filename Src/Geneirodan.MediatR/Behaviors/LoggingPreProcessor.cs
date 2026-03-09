@@ -24,9 +24,9 @@ public sealed partial class LoggingPreProcessor<TRequest>(ILogger<TRequest> logg
     public Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        using (LogContext.PushProperty("Request", request, true))
-            if (_user?.Id is { } userId)
-                LogProcessingRequestWithUserId(requestName, userId);
+        using (LogContext.PushProperty("Request", request, destructureObjects: true))
+            if (_user is not null && _user.Id != Guid.Empty)
+                LogProcessingRequestWithUserId(requestName, _user.Id);
             else
                 LogProcessingRequest(requestName);
 

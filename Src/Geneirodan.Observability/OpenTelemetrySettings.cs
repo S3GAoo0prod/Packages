@@ -10,6 +10,7 @@ public sealed record OpenTelemetrySettings
 {
     /// <summary>
     /// Gets or sets the metrics-related configuration settings.
+    /// 
     /// </summary>
     public MetricsSettings? Metrics { get; init; }
 

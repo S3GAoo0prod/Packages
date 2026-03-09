@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using JetBrains.Annotations;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Geneirodan.AspNetCore;
 
-internal class ExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
+/// <inheritdoc />
+[PublicAPI]
+public class ExceptionHandler(IProblemDetailsService problemDetailsService) : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    /// <inheritdoc />
+    public virtual async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         var statusCode = exception switch
         {

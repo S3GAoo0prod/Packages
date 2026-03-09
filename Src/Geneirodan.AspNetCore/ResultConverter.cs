@@ -44,8 +44,8 @@ public static class ResultConverter
     private static ValidationProblem ValidationError(IEnumerable<ValidationError> resultValidationErrors)
     {
         var errors = resultValidationErrors
-            .GroupBy(x => x.Identifier, x => x.ErrorMessage)
-            .ToDictionary(x => x.Key, x => x.ToArray());
+            .GroupBy(x => x.Identifier, x => x.ErrorMessage, StringComparer.Ordinal)
+            .ToDictionary(x => x.Key, x => x.ToArray(), StringComparer.Ordinal);
         return TypedResults.ValidationProblem(errors);
     }
 
@@ -57,7 +57,7 @@ public static class ResultConverter
     /// <returns>A <see cref="ProblemHttpResult"/> representing the error response.</returns>
     private static ProblemHttpResult Error(IResult result, int? statusCode)
     {
-        var extensions = new Dictionary<string, object?>();
+        var extensions = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase);
         if (result.Errors.Any())
             extensions.TryAdd("errors", result.Errors);
         return TypedResults.Problem(statusCode:statusCode, extensions: extensions);

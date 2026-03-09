@@ -15,17 +15,17 @@ namespace Geneirodan.AspNetCore;
 public static class EndpointRouteBuilderExtensions
 {
     /// <summary>
-    /// Maps a health check endpoint to the specified route in the <see cref="IEndpointRouteBuilder"/>.
+    /// Maps a health check endpoint that returns a JSON response.
     /// </summary>
-    /// <param name="routeBuilder">The endpoint route builder to map the health check endpoint to.</param>
-    /// <param name="pattern"></param>
-    /// <returns>An <see cref="IEndpointConventionBuilder"/> for the mapped health check endpoint.</returns>
-    public static IEndpointConventionBuilder MapHealthChecks(
+    /// <inheritdoc cref="HealthCheckEndpointRouteBuilderExtensions.MapHealthChecks(IEndpointRouteBuilder, string, HealthCheckOptions?)"/>
+    public static IEndpointConventionBuilder MapHealthChecksWithJsonSupport(
         this IEndpointRouteBuilder routeBuilder,
-        [StringSyntax("Route")]string pattern = "/health"
-    ) => routeBuilder.MapHealthChecks(
-        pattern: pattern,
-        options: new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponseNoExceptionDetails }
-    );
-    
+        [StringSyntax("Route"), RouteTemplate] string pattern = "/health",
+        HealthCheckOptions? options = null
+    )
+    {
+        options ??= new HealthCheckOptions();
+        options.ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponseNoExceptionDetails;
+        return routeBuilder.MapHealthChecks(pattern, options);
+    }
 }

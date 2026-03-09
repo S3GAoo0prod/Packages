@@ -15,7 +15,7 @@ public class ValidationBehaviorTests(ApiFactory factory) : PipelineTest(factory)
     public async Task ValidationBehavior_ShouldReturnInvalid_WhenValidationFails(string email)
     {
         var command = new ValidatedCommand(email);
-        var result = await Sender.Send(command);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Invalid);
         result.ValidationErrors.ShouldNotBeEmpty();
         result.ValidationErrors.ShouldContain(x => x.Identifier == nameof(command.Email));
@@ -26,7 +26,7 @@ public class ValidationBehaviorTests(ApiFactory factory) : PipelineTest(factory)
     public async Task ValidationBehavior_ShouldReturnSuccess_WhenRequestIsValid(string email)
     {
         var command = new ValidatedCommand(email);
-        var result = await Sender.Send(command);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Ok);
         result.ValidationErrors.ShouldBeEmpty();
     }

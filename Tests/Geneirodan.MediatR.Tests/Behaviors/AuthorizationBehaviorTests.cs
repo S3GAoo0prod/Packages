@@ -20,10 +20,10 @@ public sealed class AuthorizationBehaviorTests : PipelineTest
     [Fact]
     public async Task Send_ShouldReturnUnauthorized_WhenUserIsNotAuthenticated()
     {
-        _userMock.Setup(x => x.Id).Returns(null as Guid?);
-        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
-        var command = new AuthorizedCommand(false);
-        var result = await Sender.Send(command);
+        _userMock.Setup(x => x.Id).Returns(Guid.Empty);
+        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(value: false);
+        var command = new AuthorizedCommand(ShouldFail: false);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Unauthorized);
     }
 
@@ -31,19 +31,19 @@ public sealed class AuthorizationBehaviorTests : PipelineTest
     public async Task Send_ShouldReturnForbidden_WhenUserIsNotInRole()
     {
         _userMock.Setup(x => x.Id).Returns(Guid.NewGuid());
-        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
-        var command = new AdminCommand(false);
-        var result = await Sender.Send(command);
+        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(value: false);
+        var command = new AdminCommand(ShouldFail: false);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Forbidden);
     }
 
     [Fact]
     public async Task Send_ShouldReturnSuccess_WhenNoAuthorizationRequired()
     {
-        _userMock.Setup(x => x.Id).Returns(null as Guid?);
-        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
-        var command = new Command(false);
-        var result = await Sender.Send(command);
+        _userMock.Setup(x => x.Id).Returns(Guid.Empty);
+        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(value: false);
+        var command = new Command(ShouldFail: false);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Ok);
     }
 
@@ -51,9 +51,9 @@ public sealed class AuthorizationBehaviorTests : PipelineTest
     public async Task Send_ShouldReturnSuccess_WhenUserAuthenticated()
     {
         _userMock.Setup(x => x.Id).Returns(Guid.NewGuid());
-        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(false);
-        var command = new AuthorizedCommand(false);
-        var result = await Sender.Send(command);
+        _userMock.Setup(x => x.IsInRole(It.IsAny<string>())).Returns(value: false);
+        var command = new AuthorizedCommand(ShouldFail: false);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Ok);
     }
 
@@ -61,9 +61,9 @@ public sealed class AuthorizationBehaviorTests : PipelineTest
     public async Task Send_ShouldReturnSuccess_WhenUserInRole()
     {
         _userMock.Setup(x => x.Id).Returns(Guid.NewGuid());
-        _userMock.Setup(x => x.IsInRole("Admin")).Returns(true);
-        var command = new AdminCommand(false);
-        var result = await Sender.Send(command);
+        _userMock.Setup(x => x.IsInRole("Admin")).Returns(value: true);
+        var command = new AdminCommand(ShouldFail: false);
+        var result = await Sender.Send(command, TestContext.Current.CancellationToken);
         result.Status.ShouldBe(ResultStatus.Ok);
     }
 }
