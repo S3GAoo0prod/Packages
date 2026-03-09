@@ -5,7 +5,9 @@ name: .NET
 
 on:
   push:
-    branches: [ "main", "dev", "release/**" ]
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
 
 jobs:    
   build:
@@ -39,6 +41,7 @@ jobs:
         run: dotnet pack -p:VersionSuffix='beta' -c Release
           
       - name: Prep packages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
         run: |
           dotnet nuget add source "https://nuget.pkg.github.com/Geneirodan/index.json" \
             --name Github \
@@ -47,4 +50,5 @@ jobs:
             --store-password-in-clear-text
   
       - name: Push package to GitHub packages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
         run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.PACKAGES_TOKEN }}  --source "Github"

@@ -1,6 +1,6 @@
 ﻿<Solution>
   <Folder Name="/Sample/">
-    <Project Path="Sample\Geneirodan.SampleApi\Geneirodan.SampleApi.csproj" Type="Classic C#" />
+    <Project Path="Sample\Geneirodan.SampleApi\Geneirodan.SampleApi.csproj" Type="C#" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path="nuget.config" />
@@ -10,17 +10,17 @@
     <File Path=".github\workflows\dotnet.yml" />
   </Folder>
   <Folder Name="/Src/">
-    <Project Path="Src\Geneirodan.Abstractions\Geneirodan.Abstractions.csproj" Type="Classic C#" />
-    <Project Path="Src\Geneirodan.AspNetCore\Geneirodan.AspNetCore.csproj" Type="Classic C#" />
-    <Project Path="Src\Geneirodan.EntityFrameworkCore\Geneirodan.EntityFrameworkCore.csproj" Type="Classic C#" />
-    <Project Path="Src\Geneirodan.MediatR\Geneirodan.MediatR.csproj" Type="Classic C#" />
-    <Project Path="Src\Geneirodan.Observability\Geneirodan.Observability.csproj" Type="Classic C#" />
+    <Project Path="Src\Geneirodan.Abstractions\Geneirodan.Abstractions.csproj" Type="C#" />
+    <Project Path="Src\Geneirodan.AspNetCore\Geneirodan.AspNetCore.csproj" Type="C#" />
+    <Project Path="Src\Geneirodan.EntityFrameworkCore\Geneirodan.EntityFrameworkCore.csproj" Type="C#" />
+    <Project Path="Src\Geneirodan.MediatR\Geneirodan.MediatR.csproj" Type="C#" />
+    <Project Path="Src\Geneirodan.Observability\Geneirodan.Observability.csproj" Type="C#" />
     <File Path="Src\Directory.Build.props" />
     <File Path="Src\Directory.Packages.props" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="Tests\Geneirodan.EntityFrameworkCore.Tests\Geneirodan.EntityFrameworkCore.Tests.csproj" Type="Classic C#" />
-    <Project Path="Tests\Geneirodan.MediatR.Tests\Geneirodan.MediatR.Tests.csproj" Type="Classic C#" />
+    <Project Path="Tests\Geneirodan.EntityFrameworkCore.Tests\Geneirodan.EntityFrameworkCore.Tests.csproj" Type="C#" />
+    <Project Path="Tests\Geneirodan.MediatR.Tests\Geneirodan.MediatR.Tests.csproj" Type="C#" />
     <File Path="Tests\Directory.Build.props" />
     <File Path="Tests\Directory.Packages.props" />
     <File Path="Tests\.editorconfig" />
