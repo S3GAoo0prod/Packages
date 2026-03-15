@@ -9,7 +9,7 @@ namespace Geneirodan.AspNetCore;
 
 /// <summary>
 /// Extension methods for <see cref="IEndpointRouteBuilder"/> to map health-check endpoints with a JSON response writer
-/// (HealthChecks UI format). Use these when registering health checks so that the response is machine-readable and consistent.
+/// (HealthChecks UI format) for a human-readable health summary.
 /// </summary>
 [PublicAPI]
 public static class EndpointRouteBuilderExtensions

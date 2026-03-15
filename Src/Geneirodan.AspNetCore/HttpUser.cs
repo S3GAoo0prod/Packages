@@ -6,8 +6,7 @@ namespace Geneirodan.AspNetCore;
 
 /// <summary>
 /// Implements <see cref="IUser"/> by reading the current HTTP context (claims principal).
-/// Registered as the scoped <see cref="IUser"/> when <see cref="DependencyInjection.AddHttpUser"/> is called.
-/// Allows MediatR handlers and authorization to depend on <see cref="IUser"/> instead of <see cref="HttpContext"/>.
+/// Allows handlers and authorization to depend on <see cref="IUser"/> instead of <see cref="HttpContext"/>.
 /// </summary>
 public sealed class HttpUser(IHttpContextAccessor httpContextAccessor) : IUser
 {

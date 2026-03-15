@@ -50,8 +50,7 @@ public static class DependencyInjection
 
     /// <summary>
     /// Registers <see cref="IUser"/> as a scoped service implemented by <see cref="HttpUser"/>, which reads the current
-    /// HTTP context claims. Requires HTTP context accessor (and typically JWT auth via <see cref="AddJwtAuth"/>).
-    /// Handlers and authorization can then depend on <see cref="IUser"/> instead of HTTP types.
+    /// HTTP context claims. Requires HTTP context accessor and an authentication scheme (e.g. JWT or cookies) to populate the user.
     /// </summary>
     /// <param name="services">The service collection to add the user services to.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> with <see cref="IUser"/> and <see cref="HttpUser"/> registered.</returns>

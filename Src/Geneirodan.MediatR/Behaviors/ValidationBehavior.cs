@@ -6,8 +6,8 @@ namespace Geneirodan.MediatR.Behaviors;
 
 /// <summary>
 /// Pipeline behavior that runs all FluentValidation validators registered for <typeparamref name="TRequest"/> before the handler.
-/// If any validator fails, returns an <see cref="Ardalis.Result.ResultStatus.Invalid"/> result with the validation errors
-/// via <see cref="DynamicResults.Invalid{TResponse}"/>; otherwise calls the next delegate. Validators are resolved from the container.
+/// If any validator fails, returns an <see cref="Ardalis.Result.ResultStatus.Invalid"/> result with the validation errors;
+/// otherwise calls the next delegate. Validators are resolved from the container.
 /// </summary>
 /// <typeparam name="TRequest">The type of the request (command or query) to validate.</typeparam>
 /// <typeparam name="TResponse">The response type; must implement <see cref="IResult"/> so that validation errors can be returned.</typeparam>
