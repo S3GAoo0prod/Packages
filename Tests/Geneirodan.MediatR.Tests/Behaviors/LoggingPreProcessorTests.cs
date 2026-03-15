@@ -1,4 +1,5 @@
-﻿using Geneirodan.Abstractions.Domain;
+using System.Globalization;
+using Geneirodan.Abstractions.Domain;
 using Geneirodan.MediatR.Behaviors;
 using Geneirodan.SampleApi.Application.Commands;
 using JetBrains.Annotations;
@@ -29,7 +30,7 @@ public sealed class LoggingPreProcessorTests(ApiFactory factory) : PipelineTest(
             entry.ShouldNotBeNull();
             entry.Properties.ShouldContainKeyAndValue("RequestName", new ScalarValue(nameof(Command)));
             entry.Properties.ShouldContainKey("Request");
-            entry.Properties["Request"].ToString().ShouldBeEquivalentTo("Command { ShouldFail: False }");
+            Convert.ToString(entry.Properties["Request"], CultureInfo.InvariantCulture).ShouldBeEquivalentTo("Command { ShouldFail: False }");
         }
     }
 
@@ -52,7 +53,7 @@ public sealed class LoggingPreProcessorTests(ApiFactory factory) : PipelineTest(
             entry.Properties.ShouldContainKeyAndValue("RequestName", new ScalarValue(nameof(Command)));
             entry.Properties.ShouldContainKeyAndValue("UserId", new ScalarValue(userId));
             entry.Properties.ShouldContainKey("Request");
-            entry.Properties["Request"].ToString().ShouldBeEquivalentTo("Command { ShouldFail: False }");
+            Convert.ToString(entry.Properties["Request"], CultureInfo.InvariantCulture).ShouldBeEquivalentTo("Command { ShouldFail: False }");
         }
     }
 }
