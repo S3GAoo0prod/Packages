@@ -8,8 +8,7 @@ using MediatR;
 namespace Geneirodan.SampleApi.Application.Commands;
 
 /// <summary>
-/// Sample command that either succeeds or throws an exception when <see cref="ShouldFail"/> is <see langword="true"/>.
-/// Used to demonstrate the MediatR pipeline and exception handling (e.g. <see cref="UnhandledExceptionBehavior{TRequest, TResponse}"/> and ASP.NET Core exception handler).
+/// Sample command used by tests and documentation to exercise the MediatR pipeline and exception handling.
 /// </summary>
 /// <param name="ShouldFail">When <see langword="true"/>, the handler throws; otherwise returns success.</param>
 public sealed record Command(bool ShouldFail) : ICommand
@@ -24,8 +23,7 @@ public sealed record Command(bool ShouldFail) : ICommand
 }
 
 /// <summary>
-/// Sample command that carries an email and is validated by FluentValidation before the handler runs.
-/// Demonstrates <see cref="ValidationBehavior{TRequest, TResponse}"/> and <see cref="AbstractValidator{T}"/>.
+/// Sample command that demonstrates FluentValidation before the handler runs.
 /// </summary>
 /// <param name="Email">The email to validate; must be non-empty and a valid email address format.</param>
 public sealed record ValidatedCommand(string Email) : ICommand

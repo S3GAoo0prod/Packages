@@ -15,7 +15,7 @@ public static class DependencyInjection
     /// <summary>
     /// Registers JWT Bearer authentication as the default scheme. Configuration is bound from <paramref name="sectionName"/>.
     /// Use <paramref name="configureOptions"/> to override or add options (e.g. token validation). After this call, the HTTP context user
-    /// is populated from the Bearer token and <see cref="AddHttpUser"/> can provide <see cref="IUser"/>.
+    /// is populated from the Bearer token.
     /// </summary>
     /// <param name="services">The service collection to add the authentication services to.</param>
     /// <param name="configureOptions">Optional delegate to configure <see cref="JwtBearerOptions"/>.</param>

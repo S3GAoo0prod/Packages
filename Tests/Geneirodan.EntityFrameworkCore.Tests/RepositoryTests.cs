@@ -1,4 +1,5 @@
 using Geneirodan.Abstractions.Repositories;
+using Geneirodan.EntityFrameworkCore;
 using Geneirodan.SampleApi.Domain;
 using Geneirodan.SampleApi.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ using Shouldly;
 namespace Geneirodan.EntityFrameworkCore.Tests;
 
 /// <summary>
-/// Integration tests for <see cref="Geneirodan.EntityFrameworkCore.Repository{TEntity, TKey}"/> and <see cref="Geneirodan.EntityFrameworkCore.UnitOfWork"/>
+/// Integration tests for <see cref="Repository{TEntity, TKey}"/> and <see cref="UnitOfWork"/>
 /// using the sample API's <see cref="ApplicationContext"/> and <see cref="DomainEntity"/>.
 /// </summary>
 public sealed class RepositoryTests : IntegrationTest, IAsyncDisposable

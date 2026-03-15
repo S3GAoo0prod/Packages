@@ -1,3 +1,4 @@
+using Geneirodan.Abstractions.Domain;
 using Geneirodan.MediatR.Attributes;
 using Geneirodan.MediatR.Behaviors;
 using JetBrains.Annotations;
@@ -13,7 +14,7 @@ public sealed record MediatRPipelineOptions
 {
     /// <summary>
     /// When <see langword="true"/>, <see cref="AuthorizationBehavior{TRequest,TResponse}"/> runs before the handler and enforces
-    /// <see cref="AuthorizeAttribute"/> and role requirements using <see cref="Geneirodan.Abstractions.Domain.IUser"/>.
+    /// <see cref="AuthorizeAttribute"/> and role requirements using <see cref="IUser"/>.
     /// </summary>
     public bool UseAuthorization { get; init; } = true;
 

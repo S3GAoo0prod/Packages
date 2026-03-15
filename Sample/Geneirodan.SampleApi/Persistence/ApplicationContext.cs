@@ -1,3 +1,4 @@
+using Geneirodan.EntityFrameworkCore;
 using Geneirodan.SampleApi.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,7 @@ namespace Geneirodan.SampleApi.Persistence;
 /// <summary>
 /// Entity Framework Core DbContext for the sample API. Exposes <see cref="DomainEntity"/> as <see cref="DbSet"/>.
 /// On construction, calls <see cref="DbContext.Database.EnsureCreated"/> so the database and schema are created if missing.
-/// Used with <see cref="Geneirodan.EntityFrameworkCore.Repository{TEntity, TKey}"/> and <see cref="Geneirodan.EntityFrameworkCore.UnitOfWork"/> for the sample.
+/// Used with <see cref="Repository{TEntity, TKey}"/> and <see cref="UnitOfWork"/> for the sample.
 /// </summary>
 public sealed class ApplicationContext : DbContext
 {
